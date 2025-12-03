@@ -1,7 +1,7 @@
 # ExpenseWise Backend (Spring Boot)
 
-This is the backend REST API for **ExpenseWise**, a simple personal expense tracking application.  
-The backend is built with **Spring Boot**, **JPA/Hibernate**, and **PostgreSQL**, and exposes clean CRUD endpoints for Users, Categories, and Expenses.
+This is the backend REST API for ExpenseWise, a simple personal expense tracking application.  
+The backend is built with Spring Boot, JPA/Hibernate, and PostgreSQL, and exposes clean CRUD endpoints for Users, Categories, and Expenses.
 
 ---
 
