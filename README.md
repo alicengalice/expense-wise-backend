@@ -27,6 +27,15 @@ The backend is built with Spring Boot, JPA/Hibernate, and PostgreSQL, and expose
 - ExpensewiseApplication.java
 - application.properties   (DB config)
 
+---
+
+## Flowchart and UML Diagram
+![Flowchart](https://github.com/alicengalice/expense-wise-backend/blob/main/photo_flowchart.jpeg?raw=true)
+
+![UML Diagram](https://github.com/alicengalice/expense-wise-backend/blob/main/photo_uml_diagram.jpeg?raw=true)
+
+---
+
 ## Database Schema
 
 ### User
@@ -46,6 +55,9 @@ The backend is built with Spring Boot, JPA/Hibernate, and PostgreSQL, and expose
 - `username`
 - `category_id` (FK → Category)
 - `user_id` (FK → User)
+
+
+---
 
 ## API Endpoints
 
