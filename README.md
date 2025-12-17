@@ -149,3 +149,20 @@ Swagger or Postman can be used to test all endpoints.
   "userId": 1
 }
 ```
+
+---
+## TODO / Planned Improvements
+
+Introduce DTO layer to decouple API contracts from JPA entities
+
+Finalise database-level pagination, sorting, and filtering
+
+Add monthly expense analytics for dashboard insights
+
+Improve validation and error handling consistency
+
+Add authentication and authorisation (JWT)
+
+Add tests and API documentation
+
+Prepare backend for containerised deployment
