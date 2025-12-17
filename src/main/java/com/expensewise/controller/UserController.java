@@ -18,7 +18,6 @@ public class UserController {
         this.service = service;
     }
 
-    // ---- LIST WITH PAGINATION ----
     @GetMapping
     public ResponseEntity<List<User>> getAll(
             @RequestParam(value = "_start", defaultValue = "0") int start,
@@ -39,25 +38,21 @@ public class UserController {
         return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
-    // ---- GET ONE ----
     @GetMapping("/{id}")
     public User getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
-    // ---- CREATE ----
     @PostMapping
     public User create(@RequestBody User user) {
         return service.create(user); // MUST return created user with id
     }
 
-    // ---- UPDATE ----
     @PutMapping("/{id}")
     public User update(@PathVariable Long id, @RequestBody User user) {
         return service.update(id, user);
     }
 
-    // ---- DELETE ----
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         service.delete(id);
