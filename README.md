@@ -97,7 +97,7 @@ The backend is built with Spring Boot, JPA/Hibernate, and PostgreSQL, and expose
 ## Running the Backend
 
 ### 1. Set environment variables  
-Update your PostgreSQL connection:
+Update PostgreSQL connection:
 
 ```
 
