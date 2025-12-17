@@ -18,7 +18,6 @@ public class ExpenseController {
         this.service = service;
     }
 
-    // ---- LIST WITH PAGINATION ----
     @GetMapping
     public ResponseEntity<List<Expense>> getAll(
             @RequestParam(value = "_start", defaultValue = "0") int start,
@@ -39,25 +38,21 @@ public class ExpenseController {
         return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
-    // ---- GET ONE ----
     @GetMapping("/{id}")
     public Expense getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
-    // ---- CREATE ----
     @PostMapping
     public Expense create(@RequestBody Expense expense) {
         return service.create(expense);
     }
 
-    // ---- UPDATE ----
     @PutMapping("/{id}")
     public Expense update(@PathVariable Long id, @RequestBody Expense expense) {
         return service.update(id, expense);
     }
 
-    // ---- DELETE ----
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         service.delete(id);

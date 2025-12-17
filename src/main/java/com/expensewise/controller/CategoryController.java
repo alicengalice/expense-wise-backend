@@ -18,7 +18,6 @@ public class CategoryController {
         this.service = service;
     }
 
-    // -------- LIST WITH PAGINATION (REACT ADMIN NEEDS THIS) --------
     @GetMapping
     public ResponseEntity<List<Category>> getAll(
             @RequestParam(value = "_start", defaultValue = "0") int start,
@@ -39,25 +38,21 @@ public class CategoryController {
         return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
-    // -------- GET ONE --------
     @GetMapping("/{id}")
     public Category getOne(@PathVariable Long id) {
         return service.getById(id);
     }
 
-    // -------- CREATE --------
     @PostMapping
     public Category create(@RequestBody Category category) {
-        return service.create(category); // MUST return object with ID
+        return service.create(category);
     }
 
-    // -------- UPDATE --------
     @PutMapping("/{id}")
     public Category update(@PathVariable Long id, @RequestBody Category category) {
         return service.update(id, category);
     }
 
-    // -------- DELETE --------
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         service.delete(id);
