@@ -166,3 +166,7 @@ Swagger or Postman can be used to test all endpoints.
 :white_large_square: Add tests and API documentation
 
 :white_large_square: Prepare backend for containerised deployment
+
+---
+## Improvements
+:white_check_mark: Added pagination and sorting (5th Jan 2026)
