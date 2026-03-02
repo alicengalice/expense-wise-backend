@@ -9,7 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.expensewise.entity.User;
+import com.expensewise.dto.request.UserCreateDTO;
+import com.expensewise.dto.response.UserResponseDTO;
 import com.expensewise.service.UserService;
 import com.expensewise.util.PaginationUtil;
 
@@ -27,14 +28,14 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAll(
+    public ResponseEntity<List<UserResponseDTO>> getAll(
             @RequestParam(value = "_start", defaultValue = "0") int start,
             @RequestParam(value = "_end", defaultValue = "10") int end,
             @RequestParam(value = "_sort", required = false) String sort,
             @RequestParam(value = "_order", defaultValue = "ASC") String order
     ) {
         Pageable pageable = PaginationUtil.createPageable(start, end, sort, order);
-        Page<User> page = service.getAllPaginated(pageable);
+        Page<UserResponseDTO> page = service.getAllPaginated(pageable);
         HttpHeaders headers = PaginationUtil.createContentRangeHeaders(start, end, page, RESOURCE_NAME);
 
         logger.info("Retrieved users page: start={}, end={}, total={}", start, end, page.getTotalElements());
@@ -42,23 +43,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> getById(@PathVariable Long id) {
         logger.info("Fetching user with ID: {}", id);
-        User user = service.getById(id);
+        UserResponseDTO user = service.getById(id);
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@Valid @RequestBody User user) {
+    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserCreateDTO userCreateDTO) {
         logger.info("Creating new user");
-        User created = service.create(user);
+        UserResponseDTO created = service.create(userCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @Valid @RequestBody User user) {
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserCreateDTO userCreateDTO) {
         logger.info("Updating user with ID: {}", id);
-        User updated = service.update(id, user);
+        UserResponseDTO updated = service.update(id, userCreateDTO);
         return ResponseEntity.ok(updated);
     }
 

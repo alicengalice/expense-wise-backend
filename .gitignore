@@ -50,3 +50,6 @@ Thumbs.db
 
 # Environment variables
 .env
+
+# Documentation & Testing
+docs&tests/

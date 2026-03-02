@@ -1,6 +1,7 @@
 package com.expensewise.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,84 +9,104 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.expensewise.dto.mapper.UserMapper;
+import com.expensewise.dto.request.UserCreateDTO;
+import com.expensewise.dto.response.UserResponseDTO;
 import com.expensewise.entity.User;
 import com.expensewise.repository.UserRepository;
 
 @Service
 public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-    private final UserRepository repo;
+    private final UserRepository userRepository;
+    private final UserMapper mapper;
 
-    public UserService(UserRepository repo) {
-        this.repo = repo;
+    public UserService(UserRepository userRepository, UserMapper mapper) {
+        this.userRepository = userRepository;
+        this.mapper = mapper;
     }
 
-    public List<User> getAll() {
-        return repo.findAll();
+    public List<UserResponseDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(mapper::toUserResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    public Page<User> getAllPaginated(Pageable pageable) {
-        return repo.findAll(pageable);
+    public Page<UserResponseDTO> getAllPaginated(Pageable pageable) {
+        Page<User> page = userRepository.findAll(pageable);
+        return page.map(mapper::toUserResponseDTO);
     }
 
-    public User getById(Long id) {
+    public UserResponseDTO getById(Long id) {
         if (id == null || id <= 0) {
             logger.warn("Invalid user ID requested: {}", id);
             throw new IllegalArgumentException("User ID must be a positive number");
         }
-        return repo.findById(id)
-            .orElseThrow(() -> {
-                logger.error("User not found with ID: {}", id);
-                return new RuntimeException("User not found: " + id);
-            });
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            logger.error("User not found with ID: {}", id);
+            return new RuntimeException("User not found: " + id);
+        });
+        return mapper.toUserResponseDTO(user);
     }
 
-    public User create(User user) {
-        if (user == null) {
+    public UserResponseDTO create(UserCreateDTO createDTO) {
+        if (createDTO == null) {
             logger.warn("Attempt to create null user");
             throw new IllegalArgumentException("User cannot be null");
         }
-        if (user.getUsername() == null || user.getUsername().isBlank()) {
+        if (createDTO.getUsername() == null || createDTO.getUsername().isBlank()) {
             logger.warn("User username is empty");
             throw new IllegalArgumentException("Username cannot be empty");
         }
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
+        if (createDTO.getEmail() == null || createDTO.getEmail().isBlank()) {
             logger.warn("User email is empty");
             throw new IllegalArgumentException("Email cannot be empty");
         }
-        if (repo.existsByUsername(user.getUsername())) {
-            logger.warn("Attempt to create user with existing username: {}", user.getUsername());
+        if (userRepository.existsByUsername(createDTO.getUsername())) {
+            logger.warn("Attempt to create user with existing username: {}", createDTO.getUsername());
             throw new IllegalArgumentException("Username already exists");
         }
+
+        // Map DTO to entity
+        User user = mapper.toEntity(createDTO);
+
         logger.info("Creating new user: {}", user.getUsername());
-        return repo.save(user);
+        User saved = userRepository.save(user);
+        return mapper.toUserResponseDTO(saved);
     }
 
-    public User update(Long id, User updated) {
+    public UserResponseDTO update(Long id, UserCreateDTO updateDTO) {
         if (id == null || id <= 0) {
             logger.warn("Invalid user ID for update: {}", id);
             throw new IllegalArgumentException("User ID must be a positive number");
         }
-        if (updated == null) {
+        if (updateDTO == null) {
             logger.warn("Attempt to update with null user");
             throw new IllegalArgumentException("Updated user cannot be null");
         }
         
-        User existing = getById(id);
+        // Fetch existing user
+        User existing = userRepository.findById(id).orElseThrow(() -> {
+            logger.error("User not found with ID: {}", id);
+            return new RuntimeException("User not found: " + id);
+        });
         
-        if (updated.getUsername() != null && !updated.getUsername().isBlank()) {
-            if (!existing.getUsername().equals(updated.getUsername()) && repo.existsByUsername(updated.getUsername())) {
-                logger.warn("Attempt to update user with existing username: {}", updated.getUsername());
+        // Update fields
+        if (updateDTO.getUsername() != null && !updateDTO.getUsername().isBlank()) {
+            if (!existing.getUsername().equals(updateDTO.getUsername()) && userRepository.existsByUsername(updateDTO.getUsername())) {
+                logger.warn("Attempt to update user with existing username: {}", updateDTO.getUsername());
                 throw new IllegalArgumentException("Username already exists");
             }
-            existing.setUsername(updated.getUsername());
+            existing.setUsername(updateDTO.getUsername());
         }
-        if (updated.getEmail() != null && !updated.getEmail().isBlank()) {
-            existing.setEmail(updated.getEmail());
+        if (updateDTO.getEmail() != null && !updateDTO.getEmail().isBlank()) {
+            existing.setEmail(updateDTO.getEmail());
         }
         
         logger.info("Updated user with ID: {}", id);
-        return repo.save(existing);
+        User save = userRepository.save(existing);
+        return mapper.toUserResponseDTO(save);
     }
 
     public void delete(Long id) {
@@ -93,11 +114,11 @@ public class UserService {
             logger.warn("Invalid user ID for deletion: {}", id);
             throw new IllegalArgumentException("User ID must be a positive number");
         }
-        if (!repo.existsById(id)) {
+        if (!userRepository.existsById(id)) {
             logger.error("Attempt to delete non-existent user with ID: {}", id);
             throw new RuntimeException("User not found: " + id);
         }
         logger.info("Deleting user with ID: {}", id);
-        repo.deleteById(id);
+        userRepository.deleteById(id);
     }
 }

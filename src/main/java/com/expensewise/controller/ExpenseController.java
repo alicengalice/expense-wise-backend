@@ -9,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.expensewise.entity.Expense;
+import com.expensewise.dto.request.ExpenseCreateDTO;
+import com.expensewise.dto.request.ExpenseUpdateDTO;
+import com.expensewise.dto.response.ExpenseResponseDTO;
 import com.expensewise.service.ExpenseService;
 import com.expensewise.util.PaginationUtil;
 
@@ -27,7 +29,7 @@ public class ExpenseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Expense>> getAll(
+    public ResponseEntity<List<ExpenseResponseDTO>> getAll(
             @RequestParam(value = "_start", defaultValue = "0") int start,
             @RequestParam(value = "_end", defaultValue = "10") int end,
             @RequestParam(value = "_sort", required = false) String sort,
@@ -35,7 +37,7 @@ public class ExpenseController {
     ) {
         logger.warn("Invalid pagination parameters: start={}, end={}", start, end);
         Pageable pageable = PaginationUtil.createPageable(start, end, sort, order);
-        Page<Expense> page = service.getAllPaginated(pageable);
+        Page<ExpenseResponseDTO> page = service.getAllPaginated(pageable);
         HttpHeaders headers = PaginationUtil.createContentRangeHeaders(start, end, page, RESOURCE_NAME);
 
         logger.info("Retrieved expenses page: start={}, end={}, total={}", start, end, page.getTotalElements());
@@ -43,23 +45,23 @@ public class ExpenseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Expense> getById(@PathVariable Long id) {
+    public ResponseEntity<ExpenseResponseDTO> getById(@PathVariable Long id) {
         logger.info("Fetching expense with ID: {}", id);
-        Expense expense = service.getById(id);
+        ExpenseResponseDTO expense = service.getById(id);
         return ResponseEntity.ok(expense);
     }
 
     @PostMapping
-    public ResponseEntity<Expense> create(@Valid @RequestBody Expense expense) {
+    public ResponseEntity<ExpenseResponseDTO> create(@Valid @RequestBody ExpenseCreateDTO expenseCreateDTO) {
         logger.info("Creating new expense");
-        Expense created = service.create(expense);
+        ExpenseResponseDTO created = service.create(expenseCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Expense> update(@PathVariable Long id, @Valid @RequestBody Expense expense) {
+    public ResponseEntity<ExpenseResponseDTO> update(@PathVariable Long id, @Valid @RequestBody ExpenseUpdateDTO expenseUpdateDTO) {
         logger.info("Updating expense with ID: {}", id);
-        Expense updated = service.update(id, expense);
+        ExpenseResponseDTO updated = service.update(id, expenseUpdateDTO);
         return ResponseEntity.ok(updated);
     }
 

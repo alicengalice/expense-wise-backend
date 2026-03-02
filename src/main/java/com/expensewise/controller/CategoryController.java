@@ -9,7 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.expensewise.entity.Category;
+import com.expensewise.dto.request.CategoryCreateDTO;
+import com.expensewise.dto.response.CategoryResponseDTO;
 import com.expensewise.service.CategoryService;
 import com.expensewise.util.PaginationUtil;
 
@@ -27,14 +28,14 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAll(
+    public ResponseEntity<List<CategoryResponseDTO>> getAll(
             @RequestParam(value = "_start", defaultValue = "0") int start,
             @RequestParam(value = "_end", defaultValue = "10") int end,
             @RequestParam(value = "_sort", required = false) String sort,
             @RequestParam(value = "_order", defaultValue = "ASC") String order
     ) {
         Pageable pageable = PaginationUtil.createPageable(start, end, sort, order);
-        Page<Category> page = service.getAllPaginated(pageable);
+        Page<CategoryResponseDTO> page = service.getAllPaginated(pageable);
         HttpHeaders headers = PaginationUtil.createContentRangeHeaders(start, end, page, RESOURCE_NAME);
 
         logger.info("Retrieved categories page: start={}, end={}, total={}", start, end, page.getTotalElements());
@@ -42,23 +43,23 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getOne(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponseDTO> getOne(@PathVariable Long id) {
         logger.info("Fetching category with ID: {}", id);
-        Category category = service.getById(id);
+        CategoryResponseDTO category = service.getById(id);
         return ResponseEntity.ok(category);
     }
 
     @PostMapping
-    public ResponseEntity<Category> create(@Valid @RequestBody Category category) {
+    public ResponseEntity<CategoryResponseDTO> create(@Valid @RequestBody CategoryCreateDTO categoryCreateDTO) {
         logger.info("Creating new category");
-        Category created = service.create(category);
+        CategoryResponseDTO created = service.create(categoryCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@PathVariable Long id, @Valid @RequestBody Category category) {
+    public ResponseEntity<CategoryResponseDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryCreateDTO categoryCreateDTO) {
         logger.info("Updating category with ID: {}", id);
-        Category updated = service.update(id, category);
+        CategoryResponseDTO updated = service.update(id, categoryCreateDTO);
         return ResponseEntity.ok(updated);
     }
 

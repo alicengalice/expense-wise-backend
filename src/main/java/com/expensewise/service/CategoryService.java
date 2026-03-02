@@ -1,6 +1,7 @@
 package com.expensewise.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.expensewise.dto.mapper.CategoryMapper;
+import com.expensewise.dto.request.CategoryCreateDTO;
+import com.expensewise.dto.response.CategoryResponseDTO;
 import com.expensewise.entity.Category;
 import com.expensewise.repository.CategoryRepository;
 
@@ -15,59 +19,78 @@ import com.expensewise.repository.CategoryRepository;
 public class CategoryService {
     private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper mapper;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper mapper) {
         this.categoryRepository = categoryRepository;
+        this.mapper = mapper;
     }
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryResponseDTO> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+                .map(mapper::toCategoryResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    public Page<Category> getAllPaginated(Pageable pageable) {
-        return categoryRepository.findAll(pageable);
+    public Page<CategoryResponseDTO> getAllPaginated(Pageable pageable) {
+        Page<Category> page = categoryRepository.findAll(pageable);
+        return page.map(mapper::toCategoryResponseDTO);
     }
 
-    public Category getById(Long id) {
+    public CategoryResponseDTO getById(Long id) {
         if (id == null || id <= 0) {
             logger.warn("Invalid category ID requested: {}", id);
             throw new IllegalArgumentException("Category ID must be a positive number");
         }
-        return categoryRepository.findById(id).orElseThrow(() -> {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> {
             logger.error("Category not found with ID: {}", id);
             return new RuntimeException("Category not found: " + id);
         });
+        return mapper.toCategoryResponseDTO(category);
     }
 
-    public Category create(Category category) {
-        if (category == null) {
+    public CategoryResponseDTO create(CategoryCreateDTO createDTO) {
+        if (createDTO == null) {
             logger.warn("Attempt to create null category");
             throw new IllegalArgumentException("Category cannot be null");
         }
-        if (category.getName() == null || category.getName().isBlank()) {
-            logger.warn("Category name is empty");
-            throw new IllegalArgumentException("Category name cannot be empty");
-        }
+        
+        // Map DTO to entity
+        Category category = mapper.toEntity(createDTO);
+        
         logger.info("Creating new category: {}", category.getName());
-        return categoryRepository.save(category);
+        Category saved = categoryRepository.save(category);
+        return mapper.toCategoryResponseDTO(saved);
     }
 
-    public Category update(Long id, Category updated) {
+    public CategoryResponseDTO update(Long id, CategoryCreateDTO updateDTO) {
         if (id == null || id <= 0) {
             logger.warn("Invalid category ID for update: {}", id);
             throw new IllegalArgumentException("Category ID must be a positive number");
         }
-        if (updated == null) {
+        if (updateDTO == null) {
             logger.warn("Attempt to update with null category");
             throw new IllegalArgumentException("Updated category cannot be null");
         }
         
-        Category existing = getById(id);
-        if (updated.getName() != null && !updated.getName().isBlank()) {
-            existing.setName(updated.getName());
+        // Fetch existing category
+        Category existing = categoryRepository.findById(id).orElseThrow(() -> {
+            logger.error("Category not found with ID: {}", id);
+            return new RuntimeException("Category not found: " + id);
+        });
+        
+        // Update fields (could also use CategoryUpdateDTO for partial updates)
+        if (updateDTO.getName() != null && !updateDTO.getName().isBlank()) {
+            existing.setName(updateDTO.getName());
         }
+        if (updateDTO.getDescription() != null) {
+            existing.setDescription(updateDTO.getDescription());
+        }
+        
         logger.info("Updated category with ID: {}", id);
-        return categoryRepository.save(existing);
+        Category saved = categoryRepository.save(existing);
+        return mapper.toCategoryResponseDTO(saved);
     }
 
     public void delete(Long id) {
