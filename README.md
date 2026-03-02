@@ -107,8 +107,8 @@ DB_PASSWORD=your_password_here
 Connection configured in `application.properties`:
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/expensewise
-spring.datasource.username=${DB_USERNAME}
-spring.datasource.password=${DB_PASSWORD}
+spring.datasource.username=${username}
+spring.datasource.password=${password}
 ```
 
 ### 2. Run the project
@@ -157,9 +157,9 @@ Swagger or Postman can be used to test all endpoints.
 ---
 ## TODO / Planned Improvements
 
-:white_large_square: Introduce DTO layer to decouple API contracts from JPA entities
+:white_large_square: --Introduce DTO layer to decouple API contracts from JPA entities--
 
-:white_large_square: Finalise database-level pagination, sorting, and filtering
+:white_large_square: --Finalise database-level pagination, sorting, and filtering--
 
 :white_large_square: Add monthly expense analytics for dashboard insights
 
@@ -174,3 +174,4 @@ Swagger or Postman can be used to test all endpoints.
 ---
 ## Improvements
 :white_check_mark: Added pagination and sorting (5th Jan 2026)
+:white_check_mark: Added DTO layer (2nd Mar 2026)
