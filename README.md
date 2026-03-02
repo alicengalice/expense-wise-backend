@@ -100,15 +100,15 @@ The backend is built with Spring Boot, JPA/Hibernate, and PostgreSQL, and expose
 Create a `.env` file in the `backend/` directory:
 
 ```dotenv
-DB_USERNAME=postgres
-DB_PASSWORD=password
+db_username=postgres
+db_password=password
 ```
 
 Connection configured in `application.properties`:
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/expensewise
-spring.datasource.username=${username}
-spring.datasource.password=${password}
+spring.datasource.username=${db_username}
+spring.datasource.password=${db_password}
 ```
 
 ### 2. Run the project
