@@ -101,7 +101,7 @@ Create a `.env` file in the `backend/` directory:
 
 ```dotenv
 DB_USERNAME=postgres
-DB_PASSWORD=your_password_here
+DB_PASSWORD=password
 ```
 
 Connection configured in `application.properties`:
