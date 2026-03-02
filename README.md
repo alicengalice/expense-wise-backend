@@ -157,9 +157,9 @@ Swagger or Postman can be used to test all endpoints.
 ---
 ## TODO / Planned Improvements
 
-:white_large_square: --Introduce DTO layer to decouple API contracts from JPA entities--
+:white_large_square: ~~Introduce DTO layer to decouple API contracts from JPA entities~~
 
-:white_large_square: --Finalise database-level pagination, sorting, and filtering--
+:white_large_square: ~~Finalise database-level pagination, sorting, and filtering~~
 
 :white_large_square: Add monthly expense analytics for dashboard insights
 
