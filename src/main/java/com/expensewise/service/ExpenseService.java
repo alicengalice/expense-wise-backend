@@ -1,5 +1,8 @@
 package com.expensewise.service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +16,7 @@ import com.expensewise.dto.mapper.ExpenseMapper;
 import com.expensewise.dto.request.ExpenseCreateDTO;
 import com.expensewise.dto.request.ExpenseUpdateDTO;
 import com.expensewise.dto.response.ExpenseResponseDTO;
+import com.expensewise.dto.response.ExpenseSummaryDTO;
 import com.expensewise.entity.Category;
 import com.expensewise.entity.Expense;
 import com.expensewise.entity.User;
@@ -152,4 +156,47 @@ public class ExpenseService {
         logger.info("Deleting expense with ID: {}", id);
         expenseRepo.deleteById(id);
     }
+
+    public ExpenseSummaryDTO getDailyExpenseSummary(Long userId, LocalDate date) {
+        List<Expense> expenses = expenseRepo.findByUserIdAndDate(userId, date);
+
+        BigDecimal totalAmount = expenses.stream()
+            .map(Expense::getAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new ExpenseSummaryDTO(date, "daily", totalAmount, expenses.size(), date, date);
+    }
+
+
+    public ExpenseSummaryDTO getWeeklyExpenseSummary(Long userId, LocalDate startDate, LocalDate endDate) {
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Start date must be before end date");
+        }
+
+        if (endDate.minusDays(6).isAfter(startDate)) {
+            throw new IllegalArgumentException("Day range cannot exceed 7 days");
+        }
+
+        List<Expense> expenses = expenseRepo.findByUserIdAndDateBetween(userId, startDate, endDate);
+
+        BigDecimal totalAmount = expenses.stream()
+            .map(Expense::getAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new ExpenseSummaryDTO(startDate, "weekly", totalAmount, expenses.size(), startDate, endDate);
+    }
+
+    public ExpenseSummaryDTO getMonthlyExpenseSummary(Long userId, LocalDate date) {
+        LocalDate monthStart = date.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate monthEnd = date.with(TemporalAdjusters.lastDayOfMonth());
+
+        List<Expense> expenses = expenseRepo.findByUserIdAndDateBetween(userId, monthStart, monthEnd);
+
+        BigDecimal totalAmount = expenses.stream()
+            .map(Expense::getAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new ExpenseSummaryDTO(date, "monthly", totalAmount, expenses.size(), monthStart, monthEnd);
+    }
+
 }
