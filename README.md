@@ -161,7 +161,7 @@ Swagger or Postman can be used to test all endpoints.
 
 :white_large_square: ~~Finalise database-level pagination, sorting, and filtering~~
 
-:white_large_square: Add monthly expense analytics for dashboard insights
+:white_large_square: ~~Add daily/weekly/monthly expense summary analytics for dashboard insights~~
 
 :white_large_square: Improve validation and error handling consistency
 
@@ -169,9 +169,14 @@ Swagger or Postman can be used to test all endpoints.
 
 :white_large_square: Add tests and API documentation
 
+:white_large_square: Add charts/graphs to visualise the data
+
+:white_large_square: Add export functionality
+
 :white_large_square: Prepare backend for containerised deployment
 
 ---
 ## Improvements
 :white_check_mark: Added pagination and sorting (5th Jan 2026)
 :white_check_mark: Added DTO layer (2nd Mar 2026)
+:white_check_mark: Added daily/weekly/monthly expense summary (3rd Mar 2026)
