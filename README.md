@@ -3,6 +3,9 @@
 This is the backend REST API for ExpenseWise, a simple personal expense tracking application.  
 The backend is built with Spring Boot, JPA/Hibernate, and PostgreSQL, and exposes clean CRUD endpoints for Users, Categories, and Expenses.
 
+- Frontend: https://github.com/alicengalice/expense-wise-frontend
+- Go Auth Service: https://github.com/alicengalice/go-auth-service/
+
 ---
 
 ## Tech Stack
@@ -165,7 +168,7 @@ Swagger or Postman can be used to test all endpoints.
 
 :white_large_square: Improve validation and error handling consistency
 
-:white_large_square: Add authentication and authorisation (JWT)
+:white_large_square: ~~Add authentication and authorisation (JWT)~~
 
 :white_large_square: Add tests and API documentation
 
@@ -178,5 +181,9 @@ Swagger or Postman can be used to test all endpoints.
 ---
 ## Improvements
 :white_check_mark: Added pagination and sorting (5th Jan 2026)
+
 :white_check_mark: Added DTO layer (2nd Mar 2026)
+
 :white_check_mark: Added daily/weekly/monthly expense summary (3rd Mar 2026)
+
+:white_check_mark: Refactored the core identity layer from a Java monolith into a decoupled Go-based microservice, implementing stateless JWT authentication to improve system boundaries and reduce API latency (10-11 Mar 2026)
