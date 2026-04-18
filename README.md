@@ -32,10 +32,8 @@ The backend is built with Spring Boot, JPA/Hibernate, and PostgreSQL, and expose
 
 ---
 
-## Flowchart and UML Diagram
+## Flowchart
 ![Flowchart](https://github.com/alicengalice/expense-wise-backend/blob/main/photo_flowchart.jpeg?raw=true)
-
-![UML Diagram](https://github.com/alicengalice/expense-wise-backend/blob/main/photo_uml_diagram.jpeg?raw=true)
 
 ---
 
