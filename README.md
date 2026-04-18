@@ -33,7 +33,7 @@ The backend is built with Spring Boot, JPA/Hibernate, and PostgreSQL, and expose
 ---
 
 ## Flowchart
-![Flowchart](https://github.com/alicengalice/expense-wise-backend/blob/main/photo_flowchart.jpeg?raw=true)
+![Flowchart](https://github.com/alicengalice/expense-wise-backend/blob/main/photo_flowchart_added_Go_auth.jpeg?raw=true)
 
 ---
 
