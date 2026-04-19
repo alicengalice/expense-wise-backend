@@ -1,8 +1,6 @@
 package com.expensewise.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -27,10 +25,10 @@ public class UserService {
     }
 
     public List<UserResponseDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream()
-                .map(mapper::toUserResponseDTO)
-                .collect(Collectors.toList());
+        return userRepository.findAll()
+            .stream()
+            .map(mapper::toUserResponseDTO)
+            .toList();
     }
 
     public Page<UserResponseDTO> getAllPaginated(Pageable pageable) {
@@ -55,16 +53,16 @@ public class UserService {
             logger.warn("Attempt to create null user");
             throw new IllegalArgumentException("User cannot be null");
         }
-        if (createDTO.getUsername() == null || createDTO.getUsername().isBlank()) {
+        if (createDTO.username() == null || createDTO.username().isBlank()) {
             logger.warn("User username is empty");
             throw new IllegalArgumentException("Username cannot be empty");
         }
-        if (createDTO.getEmail() == null || createDTO.getEmail().isBlank()) {
+        if (createDTO.email() == null || createDTO.email().isBlank()) {
             logger.warn("User email is empty");
             throw new IllegalArgumentException("Email cannot be empty");
         }
-        if (userRepository.existsByUsername(createDTO.getUsername())) {
-            logger.warn("Attempt to create user with existing username: {}", createDTO.getUsername());
+        if (userRepository.existsByUsername(createDTO.username())) {
+            logger.warn("Attempt to create user with existing username: {}", createDTO.username());
             throw new IllegalArgumentException("Username already exists");
         }
 
@@ -93,15 +91,15 @@ public class UserService {
         });
         
         // Update fields
-        if (updateDTO.getUsername() != null && !updateDTO.getUsername().isBlank()) {
-            if (!existing.getUsername().equals(updateDTO.getUsername()) && userRepository.existsByUsername(updateDTO.getUsername())) {
-                logger.warn("Attempt to update user with existing username: {}", updateDTO.getUsername());
+        if (updateDTO.username() != null && !updateDTO.username().isBlank()) {
+            if (!existing.getUsername().equals(updateDTO.username()) && userRepository.existsByUsername(updateDTO.username())) {
+                logger.warn("Attempt to update user with existing username: {}", updateDTO.username());
                 throw new IllegalArgumentException("Username already exists");
             }
-            existing.setUsername(updateDTO.getUsername());
+            existing.setUsername(updateDTO.username());
         }
-        if (updateDTO.getEmail() != null && !updateDTO.getEmail().isBlank()) {
-            existing.setEmail(updateDTO.getEmail());
+        if (updateDTO.email() != null && !updateDTO.email().isBlank()) {
+            existing.setEmail(updateDTO.email());
         }
         
         logger.info("Updated user with ID: {}", id);

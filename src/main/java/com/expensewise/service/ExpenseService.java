@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -48,7 +46,7 @@ public class ExpenseService {
         List<Expense> expenses = expenseRepo.findAll();
         return expenses.stream()
                 .map(mapper::toResponseDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Page<ExpenseResponseDTO> getAllPaginated(Pageable pageable) {
@@ -76,17 +74,17 @@ public class ExpenseService {
         }
         
         // Validate and fetch category
-        Category category = categoryRepo.findById(createDTO.getCategoryId())
+        Category category = categoryRepo.findById(createDTO.categoryId())
             .orElseThrow(() -> {
-                logger.error("Category not found with ID: {}", createDTO.getCategoryId());
-                return new RuntimeException("Category not found: " + createDTO.getCategoryId());
+                logger.error("Category not found with ID: {}", createDTO.categoryId());
+                return new RuntimeException("Category not found: " + createDTO.categoryId());
             });
         
         // Validate and fetch user
-        User user = userRepo.findById(createDTO.getUserId())
+        User user = userRepo.findById(createDTO.userId())
             .orElseThrow(() -> {
-                logger.error("User not found with ID: {}", createDTO.getUserId());
-                return new RuntimeException("User not found: " + createDTO.getUserId());
+                logger.error("User not found with ID: {}", createDTO.userId());
+                return new RuntimeException("User not found: " + createDTO.userId());
             });
         
         // Map DTO to entity
@@ -120,21 +118,21 @@ public class ExpenseService {
         mapper.updateEntityFromDTO(updateDTO, existing);
 
         // Handle category update if provided
-        if (updateDTO.getCategoryId() != null) {
-            Category category = categoryRepo.findById(updateDTO.getCategoryId())
+        if (updateDTO.categoryId() != null) {
+            Category category = categoryRepo.findById(updateDTO.categoryId())
                 .orElseThrow(() -> {
-                    logger.error("Category not found with ID: {}", updateDTO.getCategoryId());
-                    return new RuntimeException("Category not found: " + updateDTO.getCategoryId());
+                    logger.error("Category not found with ID: {}", updateDTO.categoryId());
+                    return new RuntimeException("Category not found: " + updateDTO.categoryId());
                 });
             existing.setCategory(category);
         }
         
         // Handle user update if provided
-        if (updateDTO.getUserId() != null) {
-            User user = userRepo.findById(updateDTO.getUserId())
+        if (updateDTO.userId() != null) {
+            User user = userRepo.findById(updateDTO.userId())
                 .orElseThrow(() -> {
-                    logger.error("User not found with ID: {}", updateDTO.getUserId());
-                    return new RuntimeException("User not found: " + updateDTO.getUserId());
+                    logger.error("User not found with ID: {}", updateDTO.userId());
+                    return new RuntimeException("User not found: " + updateDTO.userId());
                 });
             existing.setUser(user);
         }

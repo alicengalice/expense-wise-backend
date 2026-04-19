@@ -1,20 +1,11 @@
 package com.expensewise.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 /**
  * Response DTO for Category entity.
- * Contains only the data we want to expose to the API.
+ * Contains only the data that should be exposed to the API.
  */
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class CategoryResponseDTO {
-    private Long id;
-    private String name;
-    private String description;
-}
+public record CategoryResponseDTO(
+    Long id,
+    String name,
+    String description
+) {}
