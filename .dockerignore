@@ -1,0 +1,12 @@
+build/
+.gradle/
+bin/
+.vscode/
+.git/
+.gitignore
+.env
+.env.docker
+**/*.log
+**/*.iml
+**/.DS_Store
+Thumbs.db

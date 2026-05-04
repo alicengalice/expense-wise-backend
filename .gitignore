@@ -50,6 +50,7 @@ Thumbs.db
 
 # Environment variables
 .env
+.env.docker
 
 # Documentation & Testing
 docs&tests/
