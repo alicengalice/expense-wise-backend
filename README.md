@@ -185,3 +185,7 @@ Swagger or Postman can be used to test all endpoints.
 :white_check_mark: Added daily/weekly/monthly expense summary (3rd Mar 2026)
 
 :white_check_mark: Refactored the core identity layer from a Java monolith into a decoupled Go-based microservice, implementing stateless JWT authentication to improve system boundaries and reduce API latency (10-11 Mar 2026)
+
+:white_check_mark: Added backend Docker containerization with a multi-stage image build and optimized Docker context via .dockerignore (4th May 2026)
+
+:white_check_mark: Fixed health endpoint registration to align security allow-list behavior and improve stack verification during container startup (4th May 2026)
